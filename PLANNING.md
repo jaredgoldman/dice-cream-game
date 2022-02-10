@@ -23,12 +23,10 @@
 - When game is completed gamespace turns into winning message
 - Messages cannot be set from users
 
-## Logic
-
 ## Actions
 
-- Create slash command that starts server with argument for lucky number
--
+- Jared to set up logic
+- Julian to work on creating gamespace
 
 ## Pseudocode
 
