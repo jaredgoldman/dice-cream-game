@@ -34,12 +34,13 @@
 
 let win = false
 main(lucky_number) {
+
 // start listening to rolls
 setupListener(lucky_number)
 // create the gamespace
 createGameSpace(lucky_number)
 setInterval(updateGameSpace, 1000)
-}
+}`
 
 setupState() {
 // store winning number
