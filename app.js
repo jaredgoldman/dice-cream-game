@@ -8,6 +8,7 @@ let initialState = {
 let state = initialState
 
 const main = (luckyNumber, range) => {
+  setupState()
   // start listening to rolls
   setupListener(luckyNumber, range)
   // create the gamespace
@@ -65,3 +66,5 @@ const updateGameSpace = () => {
 const generateRandomRoll = (range) => {
   return Math.floor(Math.random() * range)
 }
+
+module.exports = { main }
