@@ -7,7 +7,7 @@ let initialState = {
 
 let state = initialState
 
-const main = (luckyNumber) => {
+const main = (luckyNumber, range) => {
   // start listening to rolls
   setupListener(luckyNumber)
   // create the gamespace
@@ -20,14 +20,14 @@ const setupState = (luckyNumber) => {
   state.luckyNumber = luckyNumber
 }
 
-const setupListener = (lucky_number) => {
+const setupListener = (luckyNumber, range) => {
   // communicate with gamespace
   // client.on('click') {
-  const roll = rollDice(lucky_number)
+  const roll = rollDice(luckyNumber, range)
   const id = user.id
   if (!user) {
     state.players.push({
-      id: state.players.length + 1,
+      id,
       rolls: [roll],
       wallet: "",
       otherData: {},
@@ -43,12 +43,11 @@ const setupListener = (lucky_number) => {
   // }
 }
 
-const rollDice = (lucky_number) => {
-  const number = generateRandomRoll()
+const rollDice = (lucky_number, range) => {
+  const number = generateRandomRoll(range)
   if (number === lucky_number) {
     state.win = true
   }
-  // roll dice
   return number
 }
 
@@ -63,6 +62,6 @@ const updateGameSpace = () => {
   // update game space to winning banner
 }
 
-const generateRandomRoll = () => {
-  return Math.floor(Math.random() * 10001)
+const generateRandomRoll = (range) => {
+  return Math.floor(Math.random() * range)
 }
