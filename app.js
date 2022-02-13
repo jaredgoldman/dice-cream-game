@@ -9,7 +9,7 @@ let state = initialState
 
 const main = (luckyNumber, range) => {
   // start listening to rolls
-  setupListener(luckyNumber)
+  setupListener(luckyNumber, range)
   // create the gamespace
   createGameSpace(luckyNumber)
   setInterval(updateGameSpace, 1000)
