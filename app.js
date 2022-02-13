@@ -2,31 +2,29 @@ let initialState = {
   isActive: false,
   win: false,
   luckyNumber: null,
+  range: null,
   players: [],
 }
 
 let state = initialState
 
-const main = (luckyNumber, range) => {
-  setupState()
-  // start listening to rolls
-  setupListener(luckyNumber, range)
-  // create the gamespace
-  createGameSpace(luckyNumber)
-  setInterval(updateGameSpace, 1000)
+const initializeGame = (luckyNumber, range) => {
+  setupState(luckyNumber, range)
+  createGameSpace(state.luckyNumber)
+  setInterval(updateGameSpace, 3000)
 }
 
-const setupState = (luckyNumber) => {
+const setupState = (luckyNumber, range) => {
   state.isActive = true
   state.luckyNumber = luckyNumber
+  state.range = range
 }
 
-const setupListener = (luckyNumber, range) => {
-  // communicate with gamespace
-  // client.on('click') {
-  const roll = rollDice(luckyNumber, range)
+const playerRoll = () => {
+  const roll = rollDice()
   const id = user.id
   if (!user) {
+    // add player
     state.players.push({
       id,
       rolls: [roll],
@@ -34,19 +32,18 @@ const setupListener = (luckyNumber, range) => {
       otherData: {},
     })
   } else {
-    // update user
+    // update player
     state.players.forEach((player) => {
       if (player.id === id) {
         player.rolls.push(roll)
       }
     })
   }
-  // }
 }
 
-const rollDice = (lucky_number, range) => {
-  const number = generateRandomRoll(range)
-  if (number === lucky_number) {
+const rollDice = () => {
+  const number = generateRandomRoll(state.range)
+  if (number === state.luckyNumber) {
     state.win = true
   }
   return number
@@ -54,11 +51,15 @@ const rollDice = (lucky_number, range) => {
 
 const createGameSpace = () => {
   // use discored syntax to build gamespace
+  console.log("creating gamespace")
 }
 
 const updateGameSpace = () => {
-  while (!win) {
+  if (!state.win) {
+    console.log("updating gamespace")
     // update game space to reflect current scores found in state.players
+  } else {
+    console.log("update gamespace banner")
   }
   // update game space to winning banner
 }
@@ -67,4 +68,4 @@ const generateRandomRoll = (range) => {
   return Math.floor(Math.random() * range)
 }
 
-module.exports = { main }
+module.exports = { initializeGame, playerRoll, gameState: state }
