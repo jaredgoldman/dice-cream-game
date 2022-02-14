@@ -20,7 +20,9 @@ const setupState = (luckyNumber, range) => {
   state.range = range
 }
 
-const playerRoll = () => {
+const playerRoll = (user) => {
+  // console.log(state)
+  console.log(user.id)
   const roll = rollDice()
   const id = user.id
   if (!user) {
@@ -39,6 +41,7 @@ const playerRoll = () => {
       }
     })
   }
+  return roll
 }
 
 const rollDice = () => {

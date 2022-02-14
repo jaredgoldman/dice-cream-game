@@ -10,6 +10,7 @@ const commands = [
   new SlashCommandBuilder()
     .setName("start")
     .setDescription("initializes dice cream"),
+  new SlashCommandBuilder().setName("roll").setDescription("roll the dice!"),
 ].map((command) => command.toJSON())
 
 const rest = new REST({ version: "9" }).setToken(token)

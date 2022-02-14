@@ -16,13 +16,13 @@ client.once("ready", () => {
 
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return
-  const { commandName } = interaction
+  const { commandName, user } = interaction
   if (commandName === "start") {
     initializeGame(4200, 10000)
     await interaction.reply("Game started!")
   }
   if (commandName === "roll") {
-    const rollNumber = playerRoll()
+    const rollNumber = playerRoll(user)
     await interaction.reply(`you rolled the number ${rollNumber}`)
   }
 })
