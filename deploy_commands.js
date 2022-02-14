@@ -9,7 +9,19 @@ const token = process.env.DISCORD_TOKEN
 const commands = [
   new SlashCommandBuilder()
     .setName("start")
-    .setDescription("initializes dice cream"),
+    .setDescription("initializes dice cream")
+    .addNumberOption((option) =>
+      option
+        .setName("lucky_number")
+        .setDescription("the winning number!")
+        .setRequired(true)
+    )
+    .addNumberOption((option) =>
+      option
+        .setName("range")
+        .setDescription("numbers will be rolled up to this number")
+        .setRequired(true)
+    ),
   new SlashCommandBuilder().setName("roll").setDescription("roll the dice!"),
 ].map((command) => command.toJSON())
 

@@ -5,13 +5,18 @@ let initialState = {
   range: null,
   players: [],
 }
+let gameInterval
 
 let state = initialState
 
 const initializeGame = (luckyNumber, range) => {
   setupState(luckyNumber, range)
   createGameSpace(state.luckyNumber)
-  setInterval(updateGameSpace, 3000)
+  gameInterval = setInterval(updateGameSpace, 3000)
+}
+
+const stopGame = () => {
+  clearInterval(gameInterval)
 }
 
 const setupState = (luckyNumber, range) => {
@@ -39,8 +44,10 @@ const playerRoll = (user) => {
       }
     })
   }
-  console.log(state.players)
-  return roll
+  return {
+    rollNumber: roll,
+    isWin: state.win,
+  }
 }
 
 const rollDice = () => {
@@ -62,6 +69,7 @@ const updateGameSpace = () => {
     // update game space to reflect current scores found in state.players
   } else {
     console.log("update gamespace banner")
+    console.log("WINNER")
   }
   // update game space to winning banner
 }
@@ -70,4 +78,4 @@ const generateRandomRoll = (range) => {
   return Math.floor(Math.random() * range)
 }
 
-module.exports = { initializeGame, playerRoll, gameState: state }
+module.exports = { initializeGame, playerRoll, stopGame, gameState: state }
