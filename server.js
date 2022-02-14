@@ -4,7 +4,7 @@ const token = process.env.DISCORD_TOKEN
 // Require the necessary discord.js classes
 const { Client, Intents } = require("discord.js")
 // const { removeAllListeners } = require("process")
-const { initializeGame, playerRoll, state } = require("./app.js")
+const { initializeGame, playerRoll, gameState } = require("./app.js")
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
@@ -22,8 +22,12 @@ client.on("interactionCreate", async (interaction) => {
     await interaction.reply("Game started!")
   }
   if (commandName === "roll") {
-    const rollNumber = playerRoll(user)
-    await interaction.reply(`you rolled the number ${rollNumber}`)
+    if (gameState.isActive) {
+      const rollNumber = playerRoll(user)
+      await interaction.reply(`you rolled the number ${rollNumber}`)
+    } else {
+      await interaction.reply(`the game hasn't started yet!`)
+    }
   }
 })
 

@@ -21,12 +21,10 @@ const setupState = (luckyNumber, range) => {
 }
 
 const playerRoll = (user) => {
-  // console.log(state)
-  console.log(user.id)
   const roll = rollDice()
   const id = user.id
-  if (!user) {
-    // add player
+  const userExists = state.players.filter((player) => player.id === id)
+  if (!userExists.length) {
     state.players.push({
       id,
       rolls: [roll],
@@ -41,6 +39,7 @@ const playerRoll = (user) => {
       }
     })
   }
+  console.log(state.players)
   return roll
 }
 
