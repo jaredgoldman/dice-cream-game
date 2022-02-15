@@ -16,6 +16,7 @@ const initializeGame = (luckyNumber, range) => {
 }
 
 const stopGame = () => {
+  state.isActive = false
   clearInterval(gameInterval)
 }
 
@@ -30,6 +31,7 @@ const playerRoll = (user) => {
   const id = user.id
   const userExists = state.players.find((player) => player.id === id)
   if (!userExists) {
+    // create new player
     state.players.push({
       id,
       rolls: [roll],

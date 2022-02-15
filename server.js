@@ -21,15 +21,19 @@ client.on("interactionCreate", async (interaction) => {
     user,
     options: { _hoistedOptions },
   } = interaction
+
   const [luckyNumber, range] = _hoistedOptions
+
   if (commandName === "start") {
     stopGame()
     initializeGame(luckyNumber.value, range.value)
     await interaction.reply("Game started!")
   }
+
   if (commandName === "roll") {
     if (gameState.isActive) {
       const { rollNumber, isWin } = playerRoll(user)
+
       if (isWin) {
         await interaction.reply(
           `you rolled the number ${rollNumber} and WON!!!`
