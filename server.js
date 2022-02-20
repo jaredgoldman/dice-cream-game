@@ -42,7 +42,6 @@ client.on("interactionCreate", async (interaction) => {
         await interaction.reply(
           `you rolled the number ${rollNumber} and WON!!!`
         )
-        stopGame()
       } else {
         await interaction.reply(`you rolled the number ${rollNumber}`)
       }

@@ -105,6 +105,7 @@ const updateGameSpace = (msg) => {
     console.log("update gamespace banner")
     console.log("WINNER")
     msg.edit({ embeds: [gameSpaceWinner], fetchReply: true})
+    stopGame()
   }
   // update game space to winning banner
 }
