@@ -33,7 +33,7 @@ client.on("interactionCreate", async (interaction) => {
         .addComponents(
           new MessageButton()
             .setCustomId('roll')
-            .setLabel('Roll')
+            .setLabel(`Roll 🎲`)
             .setStyle('PRIMARY'),
         );
     gameSpaceMessage = await interaction.reply({ components: [row], embeds: [gameState.gameSpace], fetchReply: true});
