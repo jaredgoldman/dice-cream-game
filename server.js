@@ -17,6 +17,9 @@ client.once("ready", () => {
 
 let gameSpaceMessage;
 
+const rolledRecently = new Set();
+const timeOutInterval = 12000; 
+
 
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return
@@ -42,7 +45,6 @@ client.on("interactionCreate", async (interaction) => {
   }
   if (commandName === "roll") {
     if (gameState.isActive) {
-     
       const { rollNumber, isWin } = playerRoll(user)
       if (isWin) {
         await interaction.reply(
@@ -61,7 +63,17 @@ client.on("interactionCreate", async (interaction) => {
     const { user } = interaction
     if (interaction.customId === "roll") {
       if (gameState.isActive) {
-     
+        if (rolledRecently.has(user.id)) {
+          await interaction.reply({
+            content: "Ah ah, wait your turn!",
+            ephemeral: true,
+          }); 
+          return;
+        }
+        rolledRecently.add(user.id);
+        setTimeout(() => {
+          rolledRecently.delete(user.id);
+        }, timeOutInterval);
         const { rollNumber, isWin } = playerRoll(user)
         if (isWin) {
           await interaction.reply( {
