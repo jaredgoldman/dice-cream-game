@@ -2,9 +2,10 @@ require("dotenv").config()
 
 const token = process.env.DISCORD_TOKEN
 // Require the necessary discord.js classes
-const { Client, Intents } = require("discord.js")
+const { Client, Intents} = require("discord.js")
+
 // const { removeAllListeners } = require("process")
-const { initializeGame, playerRoll, stopGame, gameState } = require("./app.js")
+const { initializeGame, playerRoll, stopGame, startGameUpdate, gameState, gameSpace } = require("./app.js")
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
@@ -13,6 +14,9 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 client.once("ready", () => {
   console.log("Ready!")
 })
+
+let gameSpaceMessage;
+
 
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return
@@ -25,15 +29,20 @@ client.on("interactionCreate", async (interaction) => {
   if (commandName === "start") {
     stopGame()
     initializeGame(luckyNumber.value, range.value)
-    await interaction.reply("Game started!")
+
+    gameSpaceMessage = await interaction.reply({ embeds: [gameState.gameSpace], fetchReply: true});
+    startGameUpdate(gameSpaceMessage);
+
   }
   if (commandName === "roll") {
     if (gameState.isActive) {
+     
       const { rollNumber, isWin } = playerRoll(user)
       if (isWin) {
         await interaction.reply(
           `you rolled the number ${rollNumber} and WON!!!`
         )
+        stopGame()
       } else {
         await interaction.reply(`you rolled the number ${rollNumber}`)
       }
@@ -45,3 +54,4 @@ client.on("interactionCreate", async (interaction) => {
 
 // Login to Discord with your client's token
 client.login(token)
+
