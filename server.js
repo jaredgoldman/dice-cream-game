@@ -2,7 +2,7 @@ require("dotenv").config()
 
 const token = process.env.DISCORD_TOKEN
 // Require the necessary discord.js classes
-const { Client, Intents} = require("discord.js")
+const { Client, Intents, MessageActionRow, MessageButton} = require("discord.js")
 
 // const { removeAllListeners } = require("process")
 const { initializeGame, playerRoll, stopGame, startGameUpdate, gameState, gameSpace } = require("./app.js")
@@ -29,8 +29,14 @@ client.on("interactionCreate", async (interaction) => {
   if (commandName === "start") {
     stopGame()
     initializeGame(luckyNumber.value, range.value)
-
-    gameSpaceMessage = await interaction.reply({ embeds: [gameState.gameSpace], fetchReply: true});
+    const row = new MessageActionRow()
+        .addComponents(
+          new MessageButton()
+            .setCustomId('roll')
+            .setLabel('Roll')
+            .setStyle('PRIMARY'),
+        );
+    gameSpaceMessage = await interaction.reply({ components: [row], embeds: [gameState.gameSpace], fetchReply: true});
     startGameUpdate(gameSpaceMessage);
 
   }
@@ -50,7 +56,32 @@ client.on("interactionCreate", async (interaction) => {
     }
   }
 })
-
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isButton) return;
+    const { user } = interaction
+    if (interaction.customId === "roll") {
+      if (gameState.isActive) {
+     
+        const { rollNumber, isWin } = playerRoll(user)
+        if (isWin) {
+          await interaction.reply( {
+           content: `you rolled the number ${rollNumber} and WON!!!`,
+           ephemeral: true,
+          })
+        } else {
+          await interaction.reply({
+            content: `you rolled the number ${rollNumber}`,
+            ephemeral: true,
+          })
+        }
+      } else {
+        await interaction.reply({
+          content: `the game hasn't started yet!`,
+          ephemeral: true,
+        })
+      }
+    }
+})
 // Login to Discord with your client's token
 client.login(token)
 

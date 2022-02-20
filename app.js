@@ -18,7 +18,7 @@ let totalRolls = 0
 const initializeGame = (luckyNumber, range, msg) => {
   setupState(luckyNumber, range)
   createGameSpace(state.luckyNumber)
-  totalRolls = 0
+  
 }
 
 const startGameUpdate = (msg) => {
@@ -33,6 +33,8 @@ const setupState = (luckyNumber, range) => {
   state.isActive = true
   state.luckyNumber = luckyNumber
   state.range = range
+  state.win = false
+  totalRolls = 0
 }
 
 const playerRoll = (user) => {
@@ -104,7 +106,7 @@ const updateGameSpace = (msg) => {
     .setDescription(`USER has rolled ${state.luckyNumber} and WON in ${totalRolls} rolls. Please contact RANDY AL to claim your prize!`)
     console.log("update gamespace banner")
     console.log("WINNER")
-    msg.edit({ embeds: [gameSpaceWinner], fetchReply: true})
+    msg.edit({ embeds: [gameSpaceWinner], components: [], fetchReply: true})
     stopGame()
   }
   // update game space to winning banner
