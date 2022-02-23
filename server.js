@@ -4,6 +4,8 @@ const token = process.env.DISCORD_TOKEN
 // Require the necessary discord.js classes
 const { Client, Intents, MessageActionRow, MessageButton} = require("discord.js")
 
+const wait = require('util').promisify(setTimeout)
+
 // const { removeAllListeners } = require("process")
 const { initializeGame, playerRoll, stopGame, startGameUpdate, gameState, gameSpace } = require("./app.js")
 
@@ -18,7 +20,7 @@ client.once("ready", () => {
 let gameSpaceMessage;
 
 const rolledRecently = new Set();
-const timeOutInterval = 12000; 
+const timeOutInterval = 12000;
 
 
 client.on("interactionCreate", async (interaction) => {
@@ -81,10 +83,18 @@ client.on("interactionCreate", async (interaction) => {
            ephemeral: true,
           })
         } else {
+          let userTimeOut = timeOutInterval / 1000; 
           await interaction.reply({
-            content: `you rolled the number ${rollNumber}`,
-            ephemeral: true,
-          })
+              content: `you rolled the number ${rollNumber}. Please wait ${userTimeOut} seconds to roll again.`,
+              ephemeral: true,
+            })
+          while ( userTimeOut > 0) {
+            await wait(1000);
+            userTimeOut--;
+            await interaction.editReply(`you rolled the number ${rollNumber}. Please wait ${userTimeOut} seconds to roll again.`);
+          }
+          
+                
         }
       } else {
         await interaction.reply({
