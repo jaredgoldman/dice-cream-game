@@ -35,10 +35,12 @@ const setupState = (luckyNumber, range) => {
   state.range = range
   state.win = false
   totalRolls = 0
+  state.players = []
 }
 
 const playerRoll = (user) => {
   const roll = rollDice()
+  const distToLuckyNumber = Math.abs(roll - state.luckyNumber)
   totalRolls++
   const id = user.id
   const userExists = state.players.find((player) => player.id === id)
@@ -48,12 +50,18 @@ const playerRoll = (user) => {
       rolls: [roll],
       wallet: "",
       otherData: {},
+      closestRoll: roll,
+      closestRollDist: distToLuckyNumber,
     })
   } else {
     // update player
     state.players.forEach((player) => {
       if (player.id === id) {
         player.rolls.push(roll)
+        if (distToLuckyNumber < player.closestRollDist) {
+          player.closestRoll = roll;
+          player.closestRollDist = distToLuckyNumber;
+        }
       }
     })
   }
@@ -80,7 +88,7 @@ const createGameSpace = (luckyNumber) => {
   .addFields(
     { name: 'Lucky Number:', value: `${luckyNumber}` },
     { name: 'Total Rolls:', value: `${totalRolls}`},
-    { name: 'Closest Players:', value: 'Not Yet Implemented'},
+    { name: 'Closest Players:', value: 'No Rolls Yet!'},
   );
   console.log("creating gamespace")
 }
@@ -89,15 +97,24 @@ const updateGameSpace = (msg) => {
   if (!state.win) {
     console.log("updating gamespace")
     // update game space to reflect current scores found in state.players
+    const playersByDist = state.players.sort((a, b) => a.closestRollDist - b.closestRollDist).reverse();
+    const leaderBoard = playersByDist.slice(0, 5);
+
+    let leaderBoardEmbed = leaderBoard.map((player,index) => {
+      return `${index+1}) <@${player.id}> - ${player.closestRoll}\n`
+    }).join('');
+    leaderBoardEmbed = '\u200B\n' + leaderBoardEmbed;
+    console.log(leaderBoardEmbed)
+
     state.gameSpace = new MessageEmbed()
-  .setColor('#0099ff')
-  .setTitle('Dice Cream Has Begun!')
-  .setDescription('Roll the lucky number to win!')
-  .addFields(
-    { name: 'Lucky Number:', value: `${state.luckyNumber}` },
-    { name: 'Total Rolls:', value: `${totalRolls}`},
-    { name: 'Closest Players:', value: 'Not Yet Implemented'},
-  );
+      .setColor('#0099ff')
+      .setTitle('Dice Cream Has Begun!')
+      .setDescription('Roll the lucky number to win!')
+      .addFields(
+        { name: 'Lucky Number:', value: `${state.luckyNumber}` },
+        { name: 'Total Rolls:', value: `${totalRolls}`},
+        { name: 'Closest Players:', value: leaderBoardEmbed},
+      );
     msg.edit({ embeds: [state.gameSpace], fetchReply: true})
   } else {
     const gameSpaceWinner = new MessageEmbed()
