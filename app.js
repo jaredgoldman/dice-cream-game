@@ -7,6 +7,7 @@ let initialState = {
   range: null,
   players: [],
   gameSpace: null,
+  winningPlayer: null,
 }
 let gameInterval
 
@@ -36,10 +37,12 @@ const setupState = (luckyNumber, range) => {
   state.win = false
   totalRolls = 0
   state.players = []
+  state.winningPlayer = null
 }
 
 const playerRoll = (user) => {
   const roll = rollDice()
+  if (state.win) state.winningPlayer = user;
   const distToLuckyNumber = Math.abs(roll - state.luckyNumber)
   totalRolls++
   const id = user.id
@@ -97,11 +100,11 @@ const updateGameSpace = (msg) => {
   if (!state.win) {
     console.log("updating gamespace")
     // update game space to reflect current scores found in state.players
-    const playersByDist = state.players.sort((a, b) => a.closestRollDist - b.closestRollDist).reverse();
+    const playersByDist = state.players.sort((a, b) => a.closestRollDist - b.closestRollDist);
     const leaderBoard = playersByDist.slice(0, 5);
 
     let leaderBoardEmbed = leaderBoard.map((player,index) => {
-      return `${index+1}) <@${player.id}> - ${player.closestRoll}\n`
+      return `${index+1}) <@${player.id}> - ${player.closestRoll} - (${player.closestRollDist} from winning)\n`
     }).join('');
     leaderBoardEmbed = '\u200B\n' + leaderBoardEmbed;
     console.log(leaderBoardEmbed)
@@ -120,7 +123,7 @@ const updateGameSpace = (msg) => {
     const gameSpaceWinner = new MessageEmbed()
     .setColor('#ffff00')
     .setTitle('WINNNNNERRR')
-    .setDescription(`USER has rolled ${state.luckyNumber} and WON in ${totalRolls} rolls. Please contact RANDY AL to claim your prize!`)
+    .setDescription(`${state.winningPlayer} has rolled ${state.luckyNumber} and WON in ${totalRolls} rolls. Please contact <@654729418513580045> to claim your prize!`)
     console.log("update gamespace banner")
     console.log("WINNER")
     msg.edit({ embeds: [gameSpaceWinner], components: [], fetchReply: true})
