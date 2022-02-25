@@ -77,6 +77,7 @@ client.on("interactionCreate", async (interaction) => {
           rolledRecently.delete(user.id);
         }, timeOutInterval);
         const { rollNumber, isWin } = playerRoll(user)
+        
         if (isWin) {
           await interaction.reply( {
            content: `you rolled the number ${rollNumber} and WON!!!`,
@@ -92,6 +93,9 @@ client.on("interactionCreate", async (interaction) => {
             await wait(1000);
             userTimeOut--;
             await interaction.editReply(`you rolled the number ${rollNumber}. Please wait ${userTimeOut} seconds to roll again.`);
+            if (userTimeOut === 0) {
+              await interaction.editReply(`you rolled the number ${rollNumber}. Time to Roll again!`)
+            }
           }
           
                 
