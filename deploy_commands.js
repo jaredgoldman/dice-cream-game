@@ -21,6 +21,12 @@ const commands = [
         .setName("range")
         .setDescription("numbers will be rolled up to this number")
         .setRequired(true)
+    )
+    .addNumberOption((option) =>
+      option
+        .setName("timeout")
+        .setDescription("number of seconds between rolls for a single user")
+        .setRequired(true)
     ),
   new SlashCommandBuilder().setName("roll").setDescription("roll the dice!"),
 ].map((command) => command.toJSON())

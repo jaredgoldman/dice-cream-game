@@ -20,7 +20,6 @@ client.once("ready", () => {
 let gameSpaceMessage;
 
 const rolledRecently = new Set();
-const timeOutInterval = 12000;
 
 
 client.on("interactionCreate", async (interaction) => {
@@ -30,10 +29,10 @@ client.on("interactionCreate", async (interaction) => {
     user,
     options: { _hoistedOptions },
   } = interaction
-  const [luckyNumber, range] = _hoistedOptions
+  const [luckyNumber, range, timeout ] = _hoistedOptions
   if (commandName === "start") {
     stopGame()
-    initializeGame(luckyNumber.value, range.value)
+    initializeGame(luckyNumber.value, range.value, timeout.value)
     const row = new MessageActionRow()
         .addComponents(
           new MessageButton()
@@ -75,7 +74,7 @@ client.on("interactionCreate", async (interaction) => {
         rolledRecently.add(user.id);
         setTimeout(() => {
           rolledRecently.delete(user.id);
-        }, timeOutInterval);
+        }, gameState.timeOutInterval);
         const { rollNumber, isWin } = playerRoll(user)
         
         if (isWin) {
@@ -84,7 +83,7 @@ client.on("interactionCreate", async (interaction) => {
            ephemeral: true,
           })
         } else {
-          let userTimeOut = timeOutInterval / 1000; 
+          let userTimeOut = gameState.timeOutInterval / 1000; 
           await interaction.reply({
               content: `you rolled the number ${rollNumber}. Please wait ${userTimeOut} seconds to roll again.`,
               ephemeral: true,

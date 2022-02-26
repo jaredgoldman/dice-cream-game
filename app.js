@@ -8,6 +8,7 @@ let initialState = {
   players: [],
   gameSpace: null,
   winningPlayer: null,
+  timeOutInterval: null,
 }
 let gameInterval
 
@@ -16,8 +17,8 @@ let state = initialState
 let totalRolls = 0
 
 
-const initializeGame = (luckyNumber, range, msg) => {
-  setupState(luckyNumber, range)
+const initializeGame = (luckyNumber, range, timeout) => {
+  setupState(luckyNumber, range, timeout)
   createGameSpace(state.luckyNumber)
   
 }
@@ -30,7 +31,7 @@ const stopGame = () => {
   clearInterval(gameInterval)
 }
 
-const setupState = (luckyNumber, range) => {
+const setupState = (luckyNumber, range, timeout) => {
   state.isActive = true
   state.luckyNumber = luckyNumber
   state.range = range
@@ -38,6 +39,7 @@ const setupState = (luckyNumber, range) => {
   totalRolls = 0
   state.players = []
   state.winningPlayer = null
+  state.timeOutInterval = timeout * 1000
 }
 
 const playerRoll = (user) => {
@@ -104,7 +106,7 @@ const updateGameSpace = (msg) => {
     const leaderBoard = playersByDist.slice(0, 5);
 
     let leaderBoardEmbed = leaderBoard.map((player,index) => {
-      return `${index+1}) <@${player.id}> - ${player.closestRoll} - (${player.closestRollDist} from winning)\n`
+      return `${index+1}) <@${player.id}> - \`${player.closestRoll}\`\n`
     }).join('');
     leaderBoardEmbed = '\u200B\n' + leaderBoardEmbed;
     console.log(leaderBoardEmbed)
@@ -115,8 +117,9 @@ const updateGameSpace = (msg) => {
       .setDescription('Roll the lucky number to win!')
       .addFields(
         { name: 'Lucky Number:', value: `${state.luckyNumber}` },
-        { name: 'Total Rolls:', value: `${totalRolls}`},
+        { name: 'Range', value: `${state.range}`},
         { name: 'Closest Players:', value: leaderBoardEmbed},
+        { name: 'Total Rolls:', value: `${totalRolls}`},
       );
     msg.edit({ embeds: [state.gameSpace], fetchReply: true})
   } else {
