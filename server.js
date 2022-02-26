@@ -40,6 +40,9 @@ client.on("interactionCreate", async (interaction) => {
     // start updating gamespace regularely
     startGameUpdate(gameSpaceMessage)
   }
+  if (commandName === "stop") {
+    stopGame()
+  }
 })
 
 client.on("interactionCreate", async (interaction) => {
