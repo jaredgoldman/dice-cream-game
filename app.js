@@ -92,8 +92,9 @@ const createGameSpace = (luckyNumber) => {
   .setDescription('Roll the lucky number to win!')
   .addFields(
     { name: 'Lucky Number:', value: `${luckyNumber}` },
-    { name: 'Total Rolls:', value: `${totalRolls}`},
+    { name: 'Range', value: `${state.range}`},
     { name: 'Closest Players:', value: 'No Rolls Yet!'},
+    { name: 'Total Rolls:', value: `${totalRolls}`},
   );
   console.log("creating gamespace")
 }
