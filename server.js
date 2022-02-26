@@ -44,20 +44,6 @@ client.on("interactionCreate", async (interaction) => {
     startGameUpdate(gameSpaceMessage);
 
   }
-  if (commandName === "roll") {
-    if (gameState.isActive) {
-      const { rollNumber, isWin } = playerRoll(user)
-      if (isWin) {
-        await interaction.reply(
-          `you rolled the number ${rollNumber} and WON!!!`
-        )
-      } else {
-        await interaction.reply(`you rolled the number ${rollNumber}`)
-      }
-    } else {
-      await interaction.reply(`the game hasn't started yet!`)
-    }
-  }
 })
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isButton) return;

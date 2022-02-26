@@ -28,7 +28,6 @@ const commands = [
         .setDescription("number of seconds between rolls for a single user")
         .setRequired(true)
     ),
-  new SlashCommandBuilder().setName("roll").setDescription("roll the dice!"),
 ].map((command) => command.toJSON())
 
 const rest = new REST({ version: "9" }).setToken(token)
