@@ -1,4 +1,5 @@
 require("dotenv").config()
+const roleId = process.env.DISCORD_HOST_ID
 const token = process.env.DISCORD_TOKEN
 const { Client, Intents } = require("discord.js")
 const wait = require("util").promisify(setTimeout)
@@ -22,6 +23,8 @@ client.once("ready", () => {
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return
 
+  if (!interaction.member.roles.includes(roleId)) return
+
   const {
     commandName,
     options: { _hoistedOptions },
@@ -42,10 +45,15 @@ client.on("interactionCreate", async (interaction) => {
   }
   if (commandName === "stop") {
     stopGame()
+    interaction.reply({
+      content: "Game stopped",
+      ephemeral: true,
+    })
   }
 })
 
 client.on("interactionCreate", async (interaction) => {
+  if (!interaction.member.roles.includes(roleId)) return
   if (interaction.customId !== "roll") return
   const { user } = interaction
 
