@@ -166,7 +166,7 @@ const handleRolledRecently = (user) => {
 
   setTimeout(() => {
     state.rolledRecently.delete(user.id)
-  }, state.timeOutInterval)
+  }, state.timeOutInterval + 1500)
 }
 
 module.exports = {
