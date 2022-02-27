@@ -166,6 +166,7 @@ const handleRolledRecently = (user) => {
 
   setTimeout(() => {
     state.rolledRecently.delete(user.id)
+    // add buffer 1.5 seconds so users can't roll early
   }, state.timeOutInterval + 1500)
 }
 
