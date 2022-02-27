@@ -53,7 +53,6 @@ client.on("interactionCreate", async (interaction) => {
 })
 
 client.on("interactionCreate", async (interaction) => {
-  if (!interaction.member._roles.includes(roleId)) return
   if (interaction.customId !== "roll") return
   const { user } = interaction
 
