@@ -26,7 +26,7 @@ client.once("ready", () => {
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return
 
-  //if (!interaction.member._roles.includes(roleId)) return
+  if (!interaction.member._roles.includes(roleId)) return
 
   const {
     commandName,
