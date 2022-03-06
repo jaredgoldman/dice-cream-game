@@ -16,32 +16,7 @@ const {
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS] })
 
-const customEmojis = {
-  TopDog: client.emojis.cache.find(emoji => emoji.name === 'TopDog'),
-  LaughingRandy: client.emojis.cache.find(emoji => emoji.name === 'LaughingRandy'),
-  peperain: client.emojis.cache.find(emoji => emoji.name === 'peperain'),
-  veryangry: client.emojis.cache.find(emoji => emoji.name === 'veryangry'),
-  bongocat: client.emojis.cache.find(emoji => emoji.name === 'bongocat'),
-  spy: client.emojis.cache.find(emoji => emoji.name === 'spy'),
-  screamloop: client.emojis.cache.find(emoji => emoji.name === 'screamloop'),
-  freakeyebrows: client.emojis.cache.find(emoji => emoji.name === 'freakeyebrows'),
-  footlicker: client.emojis.cache.find(emoji => emoji.name === 'footlicker')
-}
 
-const losingMessages = [
-  customEmojis.LaughingRandy + ' hahahahaha! roll again and again and again ' + customEmojis.LaughingRandy,
-  customEmojis.peperain + ' cry me a river, try again ' + customEmojis.peperain,
-  customEmojis.veryangry + ' smash another roll ' + customEmojis.veryangry,
-  customEmojis.bongocat + ' come on come on come on! AGAIN! ' + customEmojis.bongocat,
-  customEmojis.spy + ' how many more times do you have to roll those dice? '+ customEmojis.spy
-]
-
-const winningMessages = [
-  customEmojis.screamloop + customEmojis.screamloop + customEmojis.screamloop + ` BIG WIN! DM <@${artistId}> to claim ` + customEmojis.screamloop + customEmojis.screamloop + customEmojis.screamloop,
-  customEmojis.freakeyebrows + ' WINNER WINNER CHICKEN DINNER ' + customEmojis.freakeyebrows,
-  customEmojis.footlicker + ' Licked it good! Congrats! ' + customEmojis.footlicker,
-  customEmojis.TopDog + ' Top Dog in the house, congrats ' + customEmojis.TopDog
-]
 
 // When the client is ready, run this code (only once)
 client.once("ready", () => {
@@ -81,6 +56,32 @@ client.on("interactionCreate", async (interaction) => {
 })
 
 client.on("interactionCreate", async (interaction) => {
+
+let TopDog = client.emojis.cache.find(emoji => emoji.name === 'TopDog')
+let LaughingRandy = client.emojis.cache.find(emoji => emoji.name === 'LaughingRandy')
+let peperain = client.emojis.cache.find(emoji => emoji.name === 'peperain')
+let veryangry = client.emojis.cache.find(emoji => emoji.name === 'veryangry')
+let bongocat = client.emojis.cache.find(emoji => emoji.name === 'bongocat')
+let spy = client.emojis.cache.find(emoji => emoji.name === 'spy')
+let screamloop = client.emojis.cache.find(emoji => emoji.name === 'screamloop')
+let freakeyebrows = client.emojis.cache.find(emoji => emoji.name === 'freakeyebrows')
+let footlicker = client.emojis.cache.find(emoji => emoji.name === 'footlicker')
+
+
+const losingMessages = [
+  `${LaughingRandy}  hahahahaha! roll again and again and again ${LaughingRandy}`,
+  `${peperain} cry me a river, try again ${peperain}`,
+  `${veryangry} smash another roll ${veryangry}`,
+  `${bongocat} come on come on come on! AGAIN! ${bongocat}`,
+  `${spy} how many more times do you have to roll those dice? ${spy}`
+]
+
+const winningMessages = [
+  `${screamloop}${screamloop}${screamloop} BIG WIN! DM <@${artistId}> to claim ${screamloop}${screamloop}${screamloop}`,
+  `${freakeyebrows} WINNER WINNER CHICKEN DINNER ${freakeyebrows}`,
+  `${footlicker} Licked it good! Congrats! ${footlicker}`,
+  `${TopDog} Top Dog in the house, congrats ${TopDog}`
+]
   if (interaction.customId !== "roll") return
   const { user } = interaction
 
@@ -108,11 +109,9 @@ client.on("interactionCreate", async (interaction) => {
     }
 
     let userTimeOut = gameState.timeOutInterval / 1000
-    let TopDog = client.emojis.cache.find(emoji => emoji.name === 'TopDog')
-    let LaughingRandy = client.emojis.cache.find(emoji => emoji.name === 'LaughingRandy')
     let randomLoseMessage = losingMessages[Math.floor(Math.random()* losingMessages.length)]
     await interaction.reply({
-      content: `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nPlease wait ${userTimeOut} seconds to roll again.${LaughingRandy}`,
+      content: `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nPlease wait ${userTimeOut} seconds to roll again.`,
       ephemeral: true,
     })
     // edit replies to keep refresh rate and roll number visible
@@ -120,10 +119,10 @@ client.on("interactionCreate", async (interaction) => {
       await wait(1000)
       userTimeOut--
       await interaction.editReply(
-        `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nPlease wait ${userTimeOut} seconds to roll again.${LaughingRandy}`
+        `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nPlease wait ${userTimeOut} seconds to roll again.`
       )
       if (userTimeOut === 0) {
-        message = `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nTime to Roll again!${LaughingRandy}`
+        message = `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nTime to Roll again!`
         await interaction.editReply(
           message
         )
