@@ -42,12 +42,7 @@ const winningMessages = [
   customEmojis.footlicker + ' Licked it good! Congrats! ' + customEmojis.footlicker,
   customEmojis.TopDog + ' Top Dog in the house, congrats ' + customEmojis.TopDog
 ]
-/*
-: screamloop: : screamloop: : screamloop: BIG WIN! DM @Randyal to claim : screamloop: : screamloop: : screamloop: 
-: freakeyebrows: WINNER WINNER CHICKEN DINNER : freakeyebrows:
-: footlicker: Licked it good! Congrats! : footlicker:
-: TopDog: Top Dog in the house, congrats : TopDog:
-*/
+
 // When the client is ready, run this code (only once)
 client.once("ready", () => {
   console.log("Dice cream ready!")
@@ -113,9 +108,11 @@ client.on("interactionCreate", async (interaction) => {
     }
 
     let userTimeOut = gameState.timeOutInterval / 1000
+    let TopDog = client.emojis.cache.find(emoji => emoji.name === 'TopDog')
+    let LaughingRandy = client.emojis.cache.find(emoji => emoji.name === 'LaughingRandy')
     let randomLoseMessage = losingMessages[Math.floor(Math.random()* losingMessages.length)]
     await interaction.reply({
-      content: `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nPlease wait ${userTimeOut} seconds to roll again.`,
+      content: `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nPlease wait ${userTimeOut} seconds to roll again.${LaughingRandy}`,
       ephemeral: true,
     })
     // edit replies to keep refresh rate and roll number visible
@@ -123,10 +120,10 @@ client.on("interactionCreate", async (interaction) => {
       await wait(1000)
       userTimeOut--
       await interaction.editReply(
-        message
+        `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nPlease wait ${userTimeOut} seconds to roll again.${LaughingRandy}`
       )
       if (userTimeOut === 0) {
-        message = `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nTime to Roll again!`
+        message = `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nTime to Roll again!${LaughingRandy}`
         await interaction.editReply(
           message
         )

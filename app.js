@@ -34,6 +34,7 @@ const stopGame = () => {
     clearInterval(gameInterval)
   }
   state.isActive = false
+  state.availableRolls = []
 }
 
 const setupState = (luckyNumber, range, timeout) => {
