@@ -39,9 +39,9 @@ client.on("interactionCreate", async (interaction) => {
     // created gamespace with embeds and button
     const gameSpace = createGameSpace()
     // send gamespace to server and gamespace back to app
-    const gameSpaceMessage = await interaction.reply(gameSpace)
+    gameState.gameSpaceMessage = await interaction.reply(gameSpace)
     // start updating gamespace regularely
-    startGameUpdate(gameSpaceMessage)
+    startGameUpdate()
   }
   if (commandName === "stop") {
     stopGame()
