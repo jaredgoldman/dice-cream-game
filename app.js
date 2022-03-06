@@ -8,10 +8,12 @@ let initialState = {
   range: null,
   players: [],
   gameSpace: null,
+  gameSpaceMessage: null,
   winningPlayer: null,
   timeOutInterval: null,
   totalRolls: 0,
   rolledRecently: new Set(),
+  availableRolls: [],
 }
 
 let gameInterval
@@ -31,6 +33,7 @@ const stopGame = () => {
   if (gameInterval) {
     clearInterval(gameInterval)
   }
+  state.isActive = false
 }
 
 const setupState = (luckyNumber, range, timeout) => {
@@ -42,11 +45,25 @@ const setupState = (luckyNumber, range, timeout) => {
   state.players = []
   state.winningPlayer = null
   state.timeOutInterval = timeout * 1000
+  state.availableRolls = [...Array(range).keys()]
 }
 
 const playerRoll = (user) => {
   const roll = rollDice()
-  if (state.win) state.winningPlayer = user
+  if (state.win) {
+    state.winningPlayer = user
+    // update game space to winning banner
+        const gameSpaceWinner = new MessageEmbed()
+        .setColor("#ffff00")
+        .setTitle("WINNNNNERRR")
+        .setDescription(
+          `${state.winningPlayer} has rolled ${state.luckyNumber} and WON in ${state.totalRolls} rolls. Please contact <@${artistId}> to claim your prize!`
+        )
+    console.log("update gamespace banner")
+    console.log("WINNER")
+    state.gameSpaceMessage.edit({ embeds: [gameSpaceWinner], components: [], fetchReply: true })
+    stopGame()
+  }
   const distToLuckyNumber = Math.abs(roll - state.luckyNumber)
   state.totalRolls++
   const id = user.id
@@ -80,7 +97,7 @@ const playerRoll = (user) => {
 }
 
 const rollDice = () => {
-  const number = generateRandomRoll(state.range)
+  const number = generateRandomRoll()
   if (number === state.luckyNumber) {
     state.win = true
   }
@@ -106,7 +123,7 @@ const createGameSpace = (luckyNumber) => {
   }
 }
 
-const updateGameSpace = (msg) => {
+const updateGameSpace = () => {
   if (!state.win) {
     // sort players by closest roll distance
     const playersByDist = state.players.sort(
@@ -132,19 +149,7 @@ const updateGameSpace = (msg) => {
         { name: "Closest Players:", value: leaderBoardEmbed },
         { name: "Total Rolls:", value: `${state.totalRolls}` }
       )
-    msg.edit({ embeds: [state.gameSpace], fetchReply: true })
-  } else {
-    // update game space to winning banner
-    const gameSpaceWinner = new MessageEmbed()
-      .setColor("#ffff00")
-      .setTitle("WINNNNNERRR")
-      .setDescription(
-        `${state.winningPlayer} has rolled ${state.luckyNumber} and WON in ${state.totalRolls} rolls. Please contact <@${artistId}> to claim your prize!`
-      )
-    console.log("update gamespace banner")
-    console.log("WINNER")
-    msg.edit({ embeds: [gameSpaceWinner], components: [], fetchReply: true })
-    stopGame()
+    state.gameSpaceMessage.edit({ embeds: [state.gameSpace], fetchReply: true })
   }
 }
 
@@ -157,8 +162,10 @@ const createButton = () => {
   )
 }
 
-const generateRandomRoll = (range) => {
-  return Math.floor(Math.random() * range)
+const generateRandomRoll = () => {
+  let index =  Math.floor(Math.random() * state.availableRolls.length)
+  let number = state.availableRolls.splice(index, 1)[0]
+  return number
 }
 
 const handleRolledRecently = (user) => {
