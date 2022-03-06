@@ -33,6 +33,7 @@ const stopGame = () => {
   if (gameInterval) {
     clearInterval(gameInterval)
   }
+  state.isActive = false
 }
 
 const setupState = (luckyNumber, range, timeout) => {
