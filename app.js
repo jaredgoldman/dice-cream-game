@@ -112,6 +112,7 @@ const createGameSpace = (luckyNumber) => {
     .setColor("#0099ff")
     .setTitle("Dice Cream Has Begun!")
     .setDescription("Roll the lucky number to win!")
+    .setThumbnail("https://i.imgur.com/nBl91fS.png")
     .addFields(
       { name: "Lucky Number:", value: `${luckyNumber}` },
       { name: "Range", value: `${state.range}` },
@@ -145,6 +146,7 @@ const updateGameSpace = () => {
       .setColor("#0099ff")
       .setTitle("Dice Cream Has Begun!")
       .setDescription("Roll the lucky number to win!")
+      .setThumbnail("https://i.imgur.com/nBl91fS.png")
       .addFields(
         { name: "Lucky Number:", value: `${state.luckyNumber}` },
         { name: "Range", value: `${state.range}` },
