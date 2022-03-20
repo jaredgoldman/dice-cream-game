@@ -114,7 +114,7 @@ client.on("interactionCreate", async (interaction) => {
 
     if (isWin) {
       let randomWinMessage =
-        winningMessages[Math.floor(Math.random() * winningMessages.length - 1)]
+        winningMessages[Math.floor(Math.random() * winningMessages.length)]
       let message = `you rolled the number ${rollNumber}.\n` + randomWinMessage
       await interaction.reply({
         content: message,
@@ -124,8 +124,10 @@ client.on("interactionCreate", async (interaction) => {
     }
 
     let userTimeOut = gameState.timeOutInterval / 1000
+
     let randomLoseMessage =
-      losingMessages[Math.floor(Math.random() * losingMessages.length - 1)]
+      losingMessages[Math.floor(Math.random() * losingMessages.length)]
+
     await interaction.reply({
       content:
         `you rolled the number ${rollNumber}.\n` +
