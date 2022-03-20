@@ -34,6 +34,7 @@ const stopGame = () => {
     clearInterval(gameInterval)
   }
   state.isActive = false
+  state.availableRolls = []
 }
 
 const setupState = (luckyNumber, range, timeout) => {
@@ -50,6 +51,7 @@ const setupState = (luckyNumber, range, timeout) => {
 
 const playerRoll = (user) => {
   const roll = rollDice()
+  state.totalRolls++
   if (state.win) {
     state.winningPlayer = user
     // update game space to winning banner
@@ -65,7 +67,7 @@ const playerRoll = (user) => {
     stopGame()
   }
   const distToLuckyNumber = Math.abs(roll - state.luckyNumber)
-  state.totalRolls++
+
   const id = user.id
   const userExists = state.players.find((player) => player.id === id)
   if (!userExists) {
@@ -110,6 +112,7 @@ const createGameSpace = (luckyNumber) => {
     .setColor("#0099ff")
     .setTitle("Dice Cream Has Begun!")
     .setDescription("Roll the lucky number to win!")
+    .setThumbnail("https://i.imgur.com/nBl91fS.png")
     .addFields(
       { name: "Lucky Number:", value: `${luckyNumber}` },
       { name: "Range", value: `${state.range}` },
@@ -143,6 +146,7 @@ const updateGameSpace = () => {
       .setColor("#0099ff")
       .setTitle("Dice Cream Has Begun!")
       .setDescription("Roll the lucky number to win!")
+      .setThumbnail("https://i.imgur.com/nBl91fS.png")
       .addFields(
         { name: "Lucky Number:", value: `${state.luckyNumber}` },
         { name: "Range", value: `${state.range}` },
