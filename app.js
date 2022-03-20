@@ -46,7 +46,8 @@ const setupState = (luckyNumber, range, timeout) => {
   state.players = []
   state.winningPlayer = null
   state.timeOutInterval = timeout * 1000
-  state.availableRolls = [...Array(range).keys()]
+  state.availableRolls = [...Array(range + 1).keys()]
+  state.availableRolls.shift()
 }
 
 const playerRoll = (user) => {
@@ -55,15 +56,19 @@ const playerRoll = (user) => {
   if (state.win) {
     state.winningPlayer = user
     // update game space to winning banner
-        const gameSpaceWinner = new MessageEmbed()
-        .setColor("#ffff00")
-        .setTitle("WINNNNNERRR")
-        .setDescription(
-          `${state.winningPlayer} has rolled ${state.luckyNumber} and WON in ${state.totalRolls} rolls. Please contact <@${artistId}> to claim your prize!`
-        )
+    const gameSpaceWinner = new MessageEmbed()
+      .setColor("#ffff00")
+      .setTitle("WINNNNNERRR")
+      .setDescription(
+        `${state.winningPlayer} has rolled ${state.luckyNumber} and WON in ${state.totalRolls} rolls. Please contact <@${artistId}> to claim your prize!`
+      )
     console.log("update gamespace banner")
     console.log("WINNER")
-    state.gameSpaceMessage.edit({ embeds: [gameSpaceWinner], components: [], fetchReply: true })
+    state.gameSpaceMessage.edit({
+      embeds: [gameSpaceWinner],
+      components: [],
+      fetchReply: true,
+    })
     stopGame()
   }
   const distToLuckyNumber = Math.abs(roll - state.luckyNumber)
@@ -167,8 +172,9 @@ const createButton = () => {
 }
 
 const generateRandomRoll = () => {
-  let index =  Math.floor(Math.random() * state.availableRolls.length)
+  let index = Math.floor(Math.random() * state.availableRolls.length)
   let number = state.availableRolls.splice(index, 1)[0]
+  console.log(state.availableRolls)
   return number
 }
 
