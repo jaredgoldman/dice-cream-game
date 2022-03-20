@@ -54,6 +54,7 @@ const playerRoll = (user) => {
   const roll = rollDice()
   state.totalRolls++
   if (state.win) {
+    stopGame()
     state.winningPlayer = user
     // update game space to winning banner
     const gameSpaceWinner = new MessageEmbed()
@@ -69,7 +70,6 @@ const playerRoll = (user) => {
       components: [],
       fetchReply: true,
     })
-    stopGame()
   }
   const distToLuckyNumber = Math.abs(roll - state.luckyNumber)
 
@@ -147,7 +147,7 @@ const updateGameSpace = () => {
       .join("")
     leaderBoardEmbed = "\u200B\n" + leaderBoardEmbed
 
-    state.gameSpace = new MessageEmbed()
+    const updatedGameSpace = new MessageEmbed()
       .setColor("#0099ff")
       .setTitle("Dice Cream Has Begun!")
       .setDescription("Roll the lucky number to win!")
@@ -158,7 +158,12 @@ const updateGameSpace = () => {
         { name: "Closest Players:", value: leaderBoardEmbed },
         { name: "Total Rolls:", value: `${state.totalRolls}` }
       )
-    state.gameSpaceMessage.edit({ embeds: [state.gameSpace], fetchReply: true })
+    return state.win
+      ? null
+      : state.gameSpaceMessage.edit({
+          embeds: [updatedGameSpace],
+          fetchReply: true,
+        })
   }
 }
 
@@ -172,9 +177,8 @@ const createButton = () => {
 }
 
 const generateRandomRoll = () => {
-  let index = Math.floor(Math.random() * state.availableRolls.length)
+  let index = Math.floor(Math.random() * state.availableRolls.length - 1)
   let number = state.availableRolls.splice(index, 1)[0]
-  console.log(state.availableRolls)
   return number
 }
 

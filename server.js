@@ -14,19 +14,59 @@ const {
   handleRolledRecently,
 } = require("./app.js")
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS] })
+const client = new Client({
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS],
+})
 
+client.login(token)
 
+let losingMessages
+let winningMessages
 
 // When the client is ready, run this code (only once)
 client.once("ready", () => {
   console.log("Dice cream ready!")
+
+  let TopDog = client.emojis.cache.find((emoji) => emoji.name === "TopDog")
+  let LaughingRandy = client.emojis.cache.find(
+    (emoji) => emoji.name === "LaughingRandy"
+  )
+  let peperain = client.emojis.cache.find((emoji) => emoji.name === "peperain")
+  let veryangry = client.emojis.cache.find(
+    (emoji) => emoji.name === "veryangry"
+  )
+  let bongocat = client.emojis.cache.find((emoji) => emoji.name === "bongocat")
+  let spy = client.emojis.cache.find((emoji) => emoji.name === "spy")
+  let screamloop = client.emojis.cache.find(
+    (emoji) => emoji.name === "screamloop"
+  )
+  let freakeyebrows = client.emojis.cache.find(
+    (emoji) => emoji.name === "freakeyebrows"
+  )
+  let footlicker = client.emojis.cache.find(
+    (emoji) => emoji.name === "footlicker"
+  )
+
+  losingMessages = [
+    `${LaughingRandy}  hahahahaha! roll again and again and again ${LaughingRandy}`,
+    `${peperain} cry me a river, try again ${peperain}`,
+    `${veryangry} smash another roll ${veryangry}`,
+    `${bongocat} come on come on come on! AGAIN! ${bongocat}`,
+    `${spy} how many more times do you have to roll those dice? ${spy}`,
+  ]
+
+  winningMessages = [
+    `${screamloop}${screamloop}${screamloop} BIG WIN! DM <@${artistId}> to claim ${screamloop}${screamloop}${screamloop}`,
+    `${freakeyebrows} WINNER WINNER CHICKEN DINNER ${freakeyebrows}`,
+    `${footlicker} Licked it good! Congrats! ${footlicker}`,
+    `${TopDog} Top Dog in the house, congrats ${TopDog}`,
+  ]
 })
 
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return
 
-  if (!interaction.member.roles.includes(roleId)) return
+  if (!interaction.member._roles.includes(roleId)) return
 
   const {
     commandName,
@@ -56,32 +96,6 @@ client.on("interactionCreate", async (interaction) => {
 })
 
 client.on("interactionCreate", async (interaction) => {
-
-let TopDog = client.emojis.cache.find(emoji => emoji.name === 'TopDog')
-let LaughingRandy = client.emojis.cache.find(emoji => emoji.name === 'LaughingRandy')
-let peperain = client.emojis.cache.find(emoji => emoji.name === 'peperain')
-let veryangry = client.emojis.cache.find(emoji => emoji.name === 'veryangry')
-let bongocat = client.emojis.cache.find(emoji => emoji.name === 'bongocat')
-let spy = client.emojis.cache.find(emoji => emoji.name === 'spy')
-let screamloop = client.emojis.cache.find(emoji => emoji.name === 'screamloop')
-let freakeyebrows = client.emojis.cache.find(emoji => emoji.name === 'freakeyebrows')
-let footlicker = client.emojis.cache.find(emoji => emoji.name === 'footlicker')
-
-
-const losingMessages = [
-  `${LaughingRandy}  hahahahaha! roll again and again and again ${LaughingRandy}`,
-  `${peperain} cry me a river, try again ${peperain}`,
-  `${veryangry} smash another roll ${veryangry}`,
-  `${bongocat} come on come on come on! AGAIN! ${bongocat}`,
-  `${spy} how many more times do you have to roll those dice? ${spy}`
-]
-
-const winningMessages = [
-  `${screamloop}${screamloop}${screamloop} BIG WIN! DM <@${artistId}> to claim ${screamloop}${screamloop}${screamloop}`,
-  `${freakeyebrows} WINNER WINNER CHICKEN DINNER ${freakeyebrows}`,
-  `${footlicker} Licked it good! Congrats! ${footlicker}`,
-  `${TopDog} Top Dog in the house, congrats ${TopDog}`
-]
   if (interaction.customId !== "roll") return
   const { user } = interaction
 
@@ -99,7 +113,8 @@ const winningMessages = [
     const { rollNumber, isWin } = playerRoll(user)
 
     if (isWin) {
-      let randomWinMessage = winningMessages[Math.floor(Math.random() * winningMessages.length)]
+      let randomWinMessage =
+        winningMessages[Math.floor(Math.random() * winningMessages.length - 1)]
       let message = `you rolled the number ${rollNumber}.\n` + randomWinMessage
       await interaction.reply({
         content: message,
@@ -109,9 +124,13 @@ const winningMessages = [
     }
 
     let userTimeOut = gameState.timeOutInterval / 1000
-    let randomLoseMessage = losingMessages[Math.floor(Math.random()* losingMessages.length)]
+    let randomLoseMessage =
+      losingMessages[Math.floor(Math.random() * losingMessages.length - 1)]
     await interaction.reply({
-      content: `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nPlease wait ${userTimeOut} seconds to roll again.`,
+      content:
+        `you rolled the number ${rollNumber}.\n` +
+        randomLoseMessage +
+        `\nPlease wait ${userTimeOut} seconds to roll again.`,
       ephemeral: true,
     })
     // edit replies to keep refresh rate and roll number visible
@@ -119,13 +138,16 @@ const winningMessages = [
       await wait(1000)
       userTimeOut--
       await interaction.editReply(
-        `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nPlease wait ${userTimeOut} seconds to roll again.`
+        `you rolled the number ${rollNumber}.\n` +
+          randomLoseMessage +
+          `\nPlease wait ${userTimeOut} seconds to roll again.`
       )
       if (userTimeOut === 0) {
-        message = `you rolled the number ${rollNumber}.\n` + randomLoseMessage + `\nTime to Roll again!`
-        await interaction.editReply(
-          message
-        )
+        message =
+          `you rolled the number ${rollNumber}.\n` +
+          randomLoseMessage +
+          `\nTime to Roll again!`
+        await interaction.editReply(message)
       }
     }
   } else {
@@ -136,4 +158,3 @@ const winningMessages = [
   }
 })
 // Login to Discord with your client's token
-client.login(token)
