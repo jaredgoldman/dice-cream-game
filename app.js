@@ -177,7 +177,7 @@ const createButton = () => {
 }
 
 const generateRandomRoll = () => {
-  let index = Math.floor(Math.random() * state.availableRolls.length - 1)
+  let index = Math.floor(Math.random() * state.availableRolls.length)
   let number = state.availableRolls.splice(index, 1)[0]
   return number
 }
