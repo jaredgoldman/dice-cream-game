@@ -108,6 +108,8 @@ client.on("interactionCreate", async (interaction) => {
       return
     }
 
+    interaction.deferReply({ ephemeral: true })
+
     handleRolledRecently(user)
 
     const { rollNumber, isWin } = playerRoll(user)
@@ -116,9 +118,8 @@ client.on("interactionCreate", async (interaction) => {
       let randomWinMessage =
         winningMessages[Math.floor(Math.random() * winningMessages.length)]
       let message = `you rolled the number ${rollNumber}.\n` + randomWinMessage
-      await interaction.reply({
+      await interaction.editReply({
         content: message,
-        ephemeral: true,
       })
       return
     }
@@ -128,12 +129,11 @@ client.on("interactionCreate", async (interaction) => {
     let randomLoseMessage =
       losingMessages[Math.floor(Math.random() * losingMessages.length)]
 
-    await interaction.reply({
+    await interaction.editReply({
       content:
         `you rolled the number ${rollNumber}.\n` +
         randomLoseMessage +
         `\nPlease wait ${userTimeOut} seconds to roll again.`,
-      ephemeral: true,
     })
     // edit replies to keep refresh rate and roll number visible
     while (userTimeOut > 0) {
